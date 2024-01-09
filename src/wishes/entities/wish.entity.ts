@@ -2,16 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
   OneToMany,
-  JoinTable,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsUrl, Length } from 'class-validator';
+import { IsNumber, IsString, IsUrl, Length } from 'class-validator';
 import { User } from '../../users/entities/user.entity';
-import { Wishlist } from '../../wishlists/entities/wishlist.entity';
+
 import { Offer } from '../../offers/entities/offer.entity';
 
 @Entity()
@@ -29,6 +27,7 @@ export class Wish {
 
   @Column({ length: 250 })
   @Length(1, 250)
+  @IsString()
   name: string;
 
   @Column()
@@ -40,9 +39,11 @@ export class Wish {
   image: string;
 
   @Column({ scale: 2 })
+  @IsNumber()
   price: number;
 
   @Column({ default: 0 })
+  @IsNumber()
   raised: number;
 
   @ManyToOne(() => User, (user) => user.wishes)
@@ -50,11 +51,13 @@ export class Wish {
 
   @Column()
   @Length(1, 1024)
+  @IsString()
   description: string;
 
   @OneToMany(() => Offer, (offer) => offer.item)
   offers: Offer[];
 
   @Column({ type: 'integer', default: 0 })
+  @IsNumber()
   copied: number;
 }

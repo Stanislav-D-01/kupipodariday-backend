@@ -2,12 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsEmail, IsUrl, Length } from 'class-validator';
+import { IsEmail, IsString, IsUrl, Length } from 'class-validator';
 import { Wish } from '../../wishes/entities/wish.entity';
 import { Wishlist } from '../../wishlists/entities/wishlist.entity';
 import { Offer } from '../../offers/entities/offer.entity';
@@ -27,10 +26,12 @@ export class User {
 
   @Column({ length: 30, unique: true })
   @Length(2, 30)
+  @IsString()
   username: string;
 
   @Column({ length: 200 })
   @Length(2, 200)
+  @IsString()
   about: string;
 
   @Column({ default: 'https://i.pravatar.cc/300' })
@@ -42,6 +43,7 @@ export class User {
   email: string;
 
   @Column()
+  @IsString()
   password: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)

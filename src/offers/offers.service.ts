@@ -1,6 +1,5 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
-import { UpdateOfferDto } from './dto/update-offer.dto';
 
 import { User } from '../users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,6 +19,13 @@ export class OffersService {
       user: user,
       item: wish,
     });
+    if (offer.user.id === wish.owner.id) {
+      throw new HttpException(
+        'Нельзя вносить деньги на свои желания',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     return await this.offersRepository.save(offer);
   }
 

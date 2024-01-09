@@ -1,7 +1,7 @@
 {
   "name": "kupipodariday-backend",
   "version": "0.0.1",
-  "description": "",
+  "description": "Сервис вишлистов. Реализовано добавление подарков в вишлистов, просмотр жедания других пользователей и возсожность скидываться на подарок ",
   "author": "Stanislav Dubinin",
   "private": true,
   "license": "UNLICENSED",

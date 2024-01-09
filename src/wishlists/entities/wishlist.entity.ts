@@ -5,12 +5,10 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsUrl, Length } from 'class-validator';
+import { IsString, IsUrl, Length } from 'class-validator';
 import { Wish } from '../../wishes/entities/wish.entity';
 import { User } from '../../users/entities/user.entity';
 
@@ -29,10 +27,12 @@ export class Wishlist {
 
   @Column()
   @Length(1, 250)
+  @IsString()
   name: string;
 
   @Column({ nullable: true })
   @Length(1, 1500)
+  @IsString()
   description: string;
 
   @Column()
