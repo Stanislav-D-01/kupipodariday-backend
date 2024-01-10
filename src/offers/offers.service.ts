@@ -25,7 +25,12 @@ export class OffersService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
+    if (offer.amount + offer.item.raised > offer.item.price) {
+      throw new HttpException(
+        'Сумма собранных средств превышает стоимость подарка',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return await this.offersRepository.save(offer);
   }
 

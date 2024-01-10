@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -84,13 +84,39 @@ export class WishesService {
   }
 
   async deleteById(id: number) {
+    const wish: Wish = await this.wishesRepository.findOne({
+      where: { id: id },
+      relations: { offers: true },
+    });
+
+    if (wish.offers.length > 0) {
+      throw new HttpException(
+        'Нельза удалить так как есть собранные средства',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return await this.wishesRepository.delete({ id: id });
   }
 
   async copy(idWish: number, user: User) {
     const wish = await this.wishesRepository.findOneBy({ id: idWish });
-    const newWish = this.wishesRepository.create({ ...wish, owner: user });
-    return this.wishesRepository.save(newWish);
+    const createWishDto: CreateWishDto = {
+      name: wish.name,
+      link: wish.link,
+      image: wish.image,
+      price: wish.price,
+      description: wish.description,
+      owner: user,
+    };
+    const newWish = await this.wishesRepository.create(createWishDto);
+
+    const updateWishDto: UpdateWishDto = {
+      raised: wish.raised,
+      copied: wish.copied + 1,
+    };
+    await this.wishesRepository.save(newWish);
+    await this.wishesRepository.update({ id: idWish }, updateWishDto);
+    return {};
   }
 
   async update(id: number, updateWishDto: UpdateWishDto) {

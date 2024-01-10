@@ -20,7 +20,7 @@ export class Wishlist extends BaseEntity {
   @IsUrl()
   image: string;
 
-  @ManyToMany(() => Wish)
+  @ManyToMany(() => Wish, (wish) => wish.wishlist)
   @JoinTable()
   items: Wish[];
 
